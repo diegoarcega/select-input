@@ -49,13 +49,17 @@ $font-size-secondary: 14px;
     font-weight: bold;
     margin: 7px 5px;
     font-size: $font-size-secondary;
-    height: 25px;
+    min-height: 25px;
+    max-width: 100%;
+    word-break: break-all;
 
     &.error {
       background: #f3b7bd;
+      cursor: pointer;
     }
 
     > svg {
+      cursor: pointer;
       margin-left: 8px;
     }
   }

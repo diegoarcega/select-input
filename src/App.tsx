@@ -31,6 +31,7 @@ function App() {
         defaultValue={value}
         placeholder="Enter recipients"
         valueValidator={validateEmail}
+        noResults="No email was found with this term"
       />
     </div>
   );

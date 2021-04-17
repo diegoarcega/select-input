@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState, useEffect, useRef } from 'react';
-import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
 import { AiFillExclamationCircle } from 'react-icons/ai';
+import { ClassicSpinner } from 'react-spinners-kit';
 
 import './select.scss';
 export interface Option {
@@ -20,12 +20,12 @@ export interface SelectProps {
   isLoading?: boolean;
 }
 
-interface OptionsMenu extends Pick<SelectProps, 'options' | 'noResults'> {
+interface OptionsMenuType extends Pick<SelectProps, 'options' | 'noResults'> {
   onOptionSelected: (option: Option) => () => void;
 }
-const OptionsMenu = ({ options = [], onOptionSelected, noResults }: OptionsMenu) => {
+const OptionsMenu = ({ options = [], onOptionSelected, noResults }: OptionsMenuType) => {
   if (!options.length) {
-    return <div className="select-options-no-results">{noResults || 'No results'}</div>;
+    return <div className="select-options-results">{noResults || 'No results'}</div>;
   }
 
   return (
@@ -81,14 +81,22 @@ export const SelectInput = ({
   }
 
   useEffect(() => {
-    if (!inputRef || !inputRef.current) {
+    const inputReference = inputRef.current;
+    if (!inputReference) {
       return;
     }
 
-    inputRef.current.addEventListener('keyup', handleKeyup);
+    inputReference.addEventListener('keyup', handleKeyup);
 
     function handleKeyup(event: KeyboardEvent) {
       event.preventDefault();
+
+      // TODO: allow one free backspace before removing the item
+      if (event.key === 'Backspace' && !inputTextValue) {
+        setValues((values) => values.slice(0, -1));
+        setIsMenuOpen(false);
+        return;
+      }
 
       // TODO: Tab needs adjustments
       if (['Enter', 'Tab'].includes(event.key)) {
@@ -98,7 +106,7 @@ export const SelectInput = ({
           setIsMenuOpen(false);
           return;
         }
-        console.log(valueValidator?.(inputTextValue));
+
         setValues((values) => [
           ...values,
           { label: inputTextValue, value: inputTextValue, isError: !valueValidator?.(inputTextValue) },
@@ -108,12 +116,13 @@ export const SelectInput = ({
     }
 
     return () => {
-      if (!inputRef || !inputRef.current) {
+      if (!inputReference) {
         return;
       }
-      inputRef.current.removeEventListener('keyup', handleKeyup);
+
+      inputReference.removeEventListener('keyup', handleKeyup);
     };
-  }, [inputRef.current, inputTextValue]);
+  }, [inputTextValue, valueValidator]);
 
   return (
     <div className="select-container">
@@ -145,9 +154,7 @@ export const SelectInput = ({
         />
       </div>
 
-      <div className="select-loading">
-        <ImSpinner9 />
-      </div>
+      <div className="select-loading">{isLoading && <ClassicSpinner size={18} color="silver" />}</div>
 
       {isMenuOpen && (
         <OptionsMenu
