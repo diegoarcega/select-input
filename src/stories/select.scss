@@ -1,6 +1,91 @@
-.select-container {
-  background: #000;
-  color: red;
+$box-shadow-value: 2px 4px 13px 4px hsl(0, 0, 92%);
+$font-size-primary: 16px;
+$font-size-secondary: 14px;
 
+.select {
+  &-container {
+    position: relative;
+    display: inline-block;
+    width: 500px;
+    background: #fff;
+    min-height: 50px;
+    border-radius: 7px;
+    box-shadow: $box-shadow-value;
+    box-sizing: border-box;
+    padding: 5px 35px 5px 0;
 
+    > * {
+      box-sizing: border-box;
+    }
+  }
+
+  &-input {
+    padding: 0 10px;
+    border: 0;
+    // border: 1px dashed #ccc;
+    outline: 0;
+    height: 45px;
+    min-width: 150px;
+    flex: 1;
+    font-size: $font-size-primary;
+  }
+
+  &-value-input-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+  }
+
+  &-value {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    background: #ededed;
+    border-radius: 7px;
+    font-weight: bold;
+    margin: 7px 5px;
+    font-size: $font-size-secondary;
+    height: 25px;
+
+    &.error {
+      background: #f3b7bd;
+    }
+
+    > svg {
+      margin-left: 8px;
+    }
+  }
+
+  &-options-results {
+    list-style: none;
+    background: #fff;
+    position: absolute;
+    max-height: 250px;
+    width: 100%;
+    overflow: auto;
+    padding: 10px;
+    box-shadow: $box-shadow-value;
+    border-radius: 7px;
+
+    & > li {
+      padding: 10px 0;
+      text-align: left;
+      font-size: $font-size-secondary;
+
+      &:hover {
+        background-color: #eff5f9;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-loading {
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 8px);
+  }
 }

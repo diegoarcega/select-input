@@ -15,5 +15,6 @@ const Template: Story<SelectProps> = (args) => <SelectInput {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  onChange: () => null,
+  onChange: console.log,
+
 };
