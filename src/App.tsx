@@ -2,7 +2,6 @@ import React, { ChangeEvent, useState } from 'react';
 import { SelectInput, Option } from './stories/Select';
 import emails from './stories/email-options';
 import { useQuery } from 'react-query';
-import './App.css';
 import debounceFn from 'debounce-fn';
 
 function App() {

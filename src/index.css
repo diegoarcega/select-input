@@ -11,3 +11,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ebebeb;
 }
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}

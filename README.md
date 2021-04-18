@@ -19,6 +19,7 @@
 - show error message under the component when there's validation error
 - when the user clicks ENTER it should select the first item of the list if the term typed is in the first item
 - clicking outside of the component should close the menu of options
+- css animations when deleting and item, showing the menu, adding an item
 
 # deviation from the project design
 
