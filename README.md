@@ -1,4 +1,14 @@
+[Live demo](http://select-input.surge.sh/)
+
 # select-input
+
+This project was bootstrapped with CRA + Storybook.
+
+## Run
+
+- `npm install`
+- `npm run storybook` for the storybook version
+- `npm start` for the CRA version
 
 ## improvements not implemented
 
