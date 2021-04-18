@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select Input should match snapshot component 1`] = `
+<div>
+  <div
+    class="select-container"
+  >
+    <div
+      class="select-value-input-container"
+    >
+      <input
+        class="select-input"
+        placeholder="Enter recipients"
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;

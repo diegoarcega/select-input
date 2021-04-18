@@ -10,13 +10,17 @@ This project was bootstrapped with CRA + Storybook.
 - `npm run storybook` for the storybook version
 - `npm start` for the CRA version
 
+## Test
+
+- `npm run test`
+
 ## improvements not implemented
 
-- unit tests
-- storybook
 - menuOptions with virtualized list to improve performance
 - customized value and options
 - customized styles
+- allow passing data-testid properties to each element
+- correct font family
 
 ## ux - suggestions
 
@@ -31,7 +35,7 @@ This project was bootstrapped with CRA + Storybook.
 - clicking outside of the component should close the menu of options
 - css animations when deleting and item, showing the menu, adding an item
 
-# deviation from the project design
+# deviation
 
 - the menu of options has the same size of the search component, this allows for more predictable component's
   behavior and easier to use on smaller screens(tablet, mobile) because the menu will be bigger and always on the
@@ -39,4 +43,6 @@ This project was bootstrapped with CRA + Storybook.
 - implemented a loading spinner that shows when the options are being loaded
 - filter options based on input text value
 - show no results on menu of options
-- show app state, so we know the Select Component is working
+- show app state(the component that uses the SelectInput component), so we know the Select Component is working
+- unit tests
+- storybook showcasing the states of the component

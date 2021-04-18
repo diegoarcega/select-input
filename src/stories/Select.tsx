@@ -36,7 +36,7 @@ const OptionsMenu = ({ options = [], onOptionSelected, noResults, showNoResults 
   return (
     <ul className="select-options-results">
       {options.map((option) => (
-        <li key={option.label} onClick={onOptionSelected(option)}>
+        <li key={option.label} onClick={onOptionSelected(option)} data-testid={`select-results-${option.value}`}>
           {option.label}
         </li>
       ))}
@@ -59,9 +59,19 @@ const SelectedValues = ({
         const iconColor = value.isError ? '#EE515F' : 'inherit';
         const iconSize = value.isError ? '18px' : '20px';
         return (
-          <div className={className} key={value.label} onClick={value.isError ? onRemove(value.value) : undefined}>
+          <div
+            className={className}
+            key={value.label}
+            onClick={value.isError ? onRemove(value.value) : undefined}
+            data-testid={value.isError ? `select-value-error-${value.value}` : `select-value-${value.value}`}
+          >
             <span>{value.label}</span>
-            <Icon color={iconColor} size={iconSize} onClick={onRemove(value.value)} />
+            <Icon
+              color={iconColor}
+              size={iconSize}
+              onClick={onRemove(value.value)}
+              data-testid={`remove-value-${value.value}`}
+            />
           </div>
         );
       })}
@@ -178,7 +188,11 @@ export const SelectInput = ({
         />
       </div>
 
-      <div className="select-loading">{isLoading && <ClassicSpinner size={18} color="silver" />}</div>
+      {isLoading && (
+        <div className="select-loading" data-testid="select-loading">
+          <ClassicSpinner size={18} color="silver" />
+        </div>
+      )}
 
       {isMenuOpen && (
         <OptionsMenu
