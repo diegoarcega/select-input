@@ -1,31 +1,45 @@
-import { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { SelectInput, Option } from './stories/Select';
 import emails from './stories/email-options';
 import { useQuery } from 'react-query';
 import './App.css';
+import debounceFn from 'debounce-fn';
 
 function App() {
-  const [value] = useState();
-  const { data, isLoading } = useQuery<Option[]>('emails', async () => {
-    const emails = await fetchEmails();
+  const [value, setValue] = useState<Option[]>();
+  const [inputTextValue, setInputTextValue] = useState('');
+  // requests with the same term are cached with react-query
+  const { data, isLoading } = useQuery<Option[]>(['emails', inputTextValue], async () => {
+    const emails = await fetchEmails(inputTextValue);
     return emails.map((email) => ({ label: email, value: email }));
   });
 
-  function handleChange(value: any) {
-    console.log(value);
-    // setValue(value);
+  function handleChange(value: Option[]) {
+    setValue(value);
   }
 
-  function fetchEmails(): Promise<string[]> {
+  function fetchEmails(term: string): Promise<string[]> {
     return new Promise((resolve) => {
-      setTimeout(resolve, 1000, emails);
+      setTimeout(
+        resolve,
+        1000,
+        emails.filter((email) => email.includes(term))
+      );
     });
   }
 
+  const debouncedHandleInputChange = debounceFn(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setInputTextValue(event.target.value);
+    },
+    { wait: 600 }
+  );
+
   return (
-    <div className="App">
+    <React.Fragment>
       <SelectInput
         onChange={handleChange}
+        onInputChange={debouncedHandleInputChange}
         options={data}
         isLoading={isLoading}
         defaultValue={value}
@@ -33,7 +47,11 @@ function App() {
         valueValidator={validateEmail}
         noResults="No email was found with this term"
       />
-    </div>
+      <small>
+        <p>App State</p>
+        <pre>{JSON.stringify(value, null, 2)}</pre>
+      </small>
+    </React.Fragment>
   );
 }
 

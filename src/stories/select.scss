@@ -22,7 +22,6 @@ $font-size-secondary: 14px;
   &-input {
     padding: 0 10px;
     border: 0;
-    // border: 1px dashed #ccc;
     outline: 0;
     height: 45px;
     min-width: 150px;
@@ -47,7 +46,7 @@ $font-size-secondary: 14px;
     background: #ededed;
     border-radius: 7px;
     font-weight: bold;
-    margin: 7px 5px;
+    margin: 3px 5px;
     font-size: $font-size-secondary;
     min-height: 25px;
     max-width: 100%;
@@ -71,12 +70,12 @@ $font-size-secondary: 14px;
     max-height: 250px;
     width: 100%;
     overflow: auto;
-    padding: 10px;
-    box-shadow: $box-shadow-value;
+    padding: 10px 0;
+    box-shadow: $box-shadow-value, inset -7px -32px 15px 0 #fff;
     border-radius: 7px;
 
     & > li {
-      padding: 10px 0;
+      padding: 10px 20px;
       text-align: left;
       font-size: $font-size-secondary;
 

@@ -1,17 +1,17 @@
 import React, { ChangeEvent, useState, useEffect, useRef } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
 import { AiFillExclamationCircle } from 'react-icons/ai';
-import { ClassicSpinner } from 'react-spinners-kit';
-
+import { ClassicSpinner } from 'react-spinners-kit'; // bloated lib, but used to be quick for the test
 import './select.scss';
 export interface Option {
   label: string;
   value: any;
   isError?: boolean;
 }
+
 export interface SelectProps {
   onChange: (value: any) => void;
-  onInputChange?: (value: any) => void;
+  onInputChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   valueValidator?: (value: any) => boolean;
   options?: Option[];
   defaultValue?: Option[];
@@ -22,8 +22,13 @@ export interface SelectProps {
 
 interface OptionsMenuType extends Pick<SelectProps, 'options' | 'noResults'> {
   onOptionSelected: (option: Option) => () => void;
+  showNoResults: boolean;
 }
-const OptionsMenu = ({ options = [], onOptionSelected, noResults }: OptionsMenuType) => {
+const OptionsMenu = ({ options = [], onOptionSelected, noResults, showNoResults }: OptionsMenuType) => {
+  if (!options.length && !showNoResults) {
+    return null;
+  }
+
   if (!options.length) {
     return <div className="select-options-results">{noResults || 'No results'}</div>;
   }
@@ -56,15 +61,23 @@ export const SelectInput = ({
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     setInputTextValue(event.target.value);
-    if (event.target.value.length > 1) {
+
+    if (onInputChange) {
+      onInputChange(event);
+    }
+
+    if (event.target.value.length > 0 && !isMenuOpen) {
       setIsMenuOpen(true);
+    }
+
+    if (event.target.value.length === 0 && isMenuOpen) {
+      setIsMenuOpen(false);
     }
   }
 
   function handleRemoveValue(valueToBeRemoved: Pick<Option, 'value'>) {
     return function () {
       const newValue = values.filter((value) => value.value !== valueToBeRemoved);
-      onChange(newValue);
       setValues(newValue);
       setInputTextValue('');
     };
@@ -73,13 +86,13 @@ export const SelectInput = ({
   function handleOptionSelected(option: Option) {
     return function () {
       const newValue = [...values, option];
-      onChange(newValue);
       setValues(newValue);
       setInputTextValue('');
       setIsMenuOpen(false);
     };
   }
 
+  // event listeners
   useEffect(() => {
     const inputReference = inputRef.current;
     if (!inputReference) {
@@ -91,27 +104,23 @@ export const SelectInput = ({
     function handleKeyup(event: KeyboardEvent) {
       event.preventDefault();
 
-      // TODO: allow one free backspace before removing the item
-      if (event.key === 'Backspace' && !inputTextValue) {
-        setValues((values) => values.slice(0, -1));
-        setIsMenuOpen(false);
-        return;
-      }
-
-      // TODO: Tab needs adjustments
+      // TODO: Tab needs adjustments, it is only selecting after navigating all other options first
       if (['Enter', 'Tab'].includes(event.key)) {
-        // if empty value
+        // if empty value, don't add the option
         if (!inputTextValue.trim()) {
           setInputTextValue('');
           setIsMenuOpen(false);
           return;
         }
 
+        // TODO: when the user clicks ENTER it should select the first item of the list if the term typed is in the first item
         setValues((values) => [
           ...values,
           { label: inputTextValue, value: inputTextValue, isError: !valueValidator?.(inputTextValue) },
         ]);
+
         setInputTextValue('');
+        setIsMenuOpen(false);
       }
     }
 
@@ -123,6 +132,11 @@ export const SelectInput = ({
       inputReference.removeEventListener('keyup', handleKeyup);
     };
   }, [inputTextValue, valueValidator]);
+
+  // when internal values change, trigger outside onChange
+  useEffect(() => {
+    onChange(values);
+  }, [values, onChange]);
 
   return (
     <div className="select-container">
@@ -161,6 +175,7 @@ export const SelectInput = ({
           options={filterOptions(inputTextValue, options, values)}
           onOptionSelected={handleOptionSelected}
           noResults={noResults}
+          showNoResults={!isLoading}
         />
       )}
     </div>
@@ -168,12 +183,11 @@ export const SelectInput = ({
 };
 
 // should not show selected options
-// should filter by term
 function filterOptions(inputTextValue: string, options?: Option[], values?: Option[]) {
   return options?.filter((option) => {
     if (values?.some((value) => value.value === option.value)) {
       return false;
     }
-    return option.label.includes(inputTextValue);
+    return true;
   });
 }
