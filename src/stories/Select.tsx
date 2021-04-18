@@ -142,7 +142,7 @@ export const SelectInput = ({
         // TODO: when the user clicks ENTER it should select the first item of the list if the term typed is in the first item
         setValues((values) => [
           ...values,
-          { label: inputTextValue, value: inputTextValue, isError: !valueValidator?.(inputTextValue) },
+          { label: inputTextValue, value: inputTextValue, isError: valueValidator && !valueValidator(inputTextValue) },
         ]);
 
         setInputTextValue('');
@@ -172,7 +172,7 @@ export const SelectInput = ({
           className="select-input"
           type="text"
           value={inputTextValue}
-          placeholder={placeholder}
+          placeholder={isLoading ? 'loading...' : placeholder}
           onChange={handleInputChange}
           ref={inputRef}
         />

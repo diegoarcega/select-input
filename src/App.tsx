@@ -2,7 +2,10 @@ import React, { ChangeEvent, useState } from 'react';
 import { SelectInput, Option } from './stories/Select';
 import emails from './stories/email-options';
 import { useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import debounceFn from 'debounce-fn';
+
+const queryClient = new QueryClient();
 
 function App() {
   const [value, setValue] = useState<Option[]>();
@@ -59,4 +62,9 @@ function validateEmail(email: string): boolean {
   return re.test(email);
 }
 
-export default App;
+const AppWrapped = () => (
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>
+);
+export default AppWrapped;
