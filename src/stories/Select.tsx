@@ -44,6 +44,31 @@ const OptionsMenu = ({ options = [], onOptionSelected, noResults, showNoResults 
   );
 };
 
+const SelectedValues = ({
+  values,
+  onRemove,
+}: {
+  values: Option[];
+  onRemove: (value: Pick<Option, 'value'>) => () => void;
+}) => {
+  return (
+    <React.Fragment>
+      {values.map((value) => {
+        const className = `select-value${value.isError ? ' error' : ''}`;
+        const Icon = value.isError ? AiFillExclamationCircle : IoCloseOutline;
+        const iconColor = value.isError ? '#EE515F' : 'inherit';
+        const iconSize = value.isError ? '18px' : '20px';
+        return (
+          <div className={className} key={value.label} onClick={value.isError ? onRemove(value.value) : undefined}>
+            <span>{value.label}</span>
+            <Icon color={iconColor} size={iconSize} onClick={onRemove(value.value)} />
+          </div>
+        );
+      })}
+    </React.Fragment>
+  );
+};
+
 export const SelectInput = ({
   onChange,
   onInputChange,
@@ -89,6 +114,7 @@ export const SelectInput = ({
       setValues(newValue);
       setInputTextValue('');
       setIsMenuOpen(false);
+      inputRef.current?.focus();
     };
   }
 
@@ -141,23 +167,7 @@ export const SelectInput = ({
   return (
     <div className="select-container">
       <div className="select-value-input-container">
-        {Array.isArray(values) &&
-          values.map((value) => {
-            const className = `select-value${value.isError ? ' error' : ''}`;
-            const Icon = value.isError ? AiFillExclamationCircle : IoCloseOutline;
-            const iconColor = value.isError ? '#EE515F' : 'inherit';
-            const iconSize = value.isError ? '18px' : '20px';
-            return (
-              <div
-                className={className}
-                key={value.label}
-                onClick={value.isError ? handleRemoveValue(value.value) : undefined}
-              >
-                <span>{value.label}</span>
-                <Icon color={iconColor} size={iconSize} onClick={handleRemoveValue(value.value)} />
-              </div>
-            );
-          })}
+        {Array.isArray(values) && <SelectedValues values={values} onRemove={handleRemoveValue} />}
         <input
           className="select-input"
           type="text"
