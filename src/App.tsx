@@ -25,7 +25,7 @@ function App() {
       setTimeout(
         resolve,
         1000,
-        emails.filter((email) => email.includes(term))
+        emails.filter((email) => email.includes(term.toLowerCase()))
       );
     });
   }
